@@ -1,0 +1,1618 @@
+*should.js.txt*   Should.js assertion library
+                BDD style assertions for node.js and browser
+                Last Changes 2017-01-06
+                From: http://shouldjs.github.io/
+                Author: Denis Bardadym<bardadymchik@gmail.com>(https://github.com/btd)
+                Editor: 闲耘 (https://github.com/hotoo)
+
+===============================================================================
+Contents ~
+
+  1. global                                                 |should.js-global|
+    1.1. Assertion.add                               |should.js-assertion.add|
+    1.2. Assertion.addChain
+    1.3. Assertion.alias
+    1.4. PromisedAssertion
+    1.5. should
+    1.6. should.Assertion
+    1.7. should.AssertionError
+    1.8. should.config
+    1.9. should.extend
+    1.10. should.noConflict
+    1.11. should.use
+  2. assertion
+    2.1. Assertion#any
+    2.2. Assertion#assert
+    2.3. Assertion#fail
+    2.4. Assertion#not
+  3. assertion assert
+    3.1. should.deepEqual
+    3.2. should.doesNotThrow
+    3.3. should.equal
+    3.4. should.exist
+    3.5. should.exists → should.exist
+    3.6. should.fail
+    3.7. should.ifError
+    3.8. should.not.exist
+    3.9. should.not.exists → should.not.exist
+    3.10. should.notDeepEqual
+    3.11. should.notEqual
+    3.12. should.notStrictEqual
+    3.13. should.ok
+    3.14. should.strictEqual
+    3.15. should.throws
+  4. assertion bool
+    4.1. Assertion#false
+    4.2. Assertion#False → Assertion#false
+    4.3. Assertion#ok
+    4.4. Assertion#true
+    4.5. Assertion#True → Assertion#true
+  5. assertion chaining
+    5.1. Assertion#be
+    5.2. Assertion#an → Assertion#be
+    5.3. Assertion#of → Assertion#be
+    5.4. Assertion#a → Assertion#be
+    5.5. Assertion#and → Assertion#be
+    5.6. Assertion#been → Assertion#be
+    5.7. Assertion#have → Assertion#be
+    5.8. Assertion#has → Assertion#be
+    5.9. Assertion#with → Assertion#be
+    5.10. Assertion#is → Assertion#be
+    5.11. Assertion#which → Assertion#be
+    5.12. Assertion#the → Assertion#be
+    5.13. Assertion#it → Assertion#be
+  6. assertion contain
+    6.1. Assertion#containDeep
+    6.2. Assertion#containDeepOrdered
+    6.3. Assertion#containEql
+  7. assertion equality
+    7.1. Assertion#eql
+    7.2. Assertion#deepEqual → Assertion#eql
+    7.3. Assertion#equal
+    7.4. Assertion#exactly → Assertion#equal
+    7.5. Assertion#equalOneOf
+    7.6. Assertion#oneOf
+  8. assertion errors
+    8.1. Assertion#throw
+    8.2. Assertion#throwError → Assertion#throw
+  9. assertion es6
+    9.1. Assertion#generator
+    9.2. Assertion#iterable
+    9.3. Assertion#iterator
+  10. assertion http
+    10.1. Assertion#header
+    10.2. Assertion#html
+    10.3. Assertion#json
+    10.4. Assertion#status
+  11. assertion matching
+    11.1. Assertion#match
+    11.2. Assertion#matchAny
+    11.3. Assertion#matchSome → Assertion#matchAny
+    11.4. Assertion#matchEach
+    11.5. Assertion#matchEvery → Assertion#matchEach
+  12. assertion numbers
+    12.1. Assertion#Infinity
+    12.2. Assertion#NaN
+    12.3. Assertion#above
+    12.4. Assertion#greaterThan → Assertion#above
+    12.5. Assertion#aboveOrEqual
+    12.6. Assertion#greaterThanOrEqual → Assertion#aboveOrEqual
+    12.7. Assertion#approximately
+    12.8. Assertion#below
+    12.9. Assertion#lessThan → Assertion#below
+    12.10. Assertion#belowOrEqual
+    12.11. Assertion#lessThanOrEqual → Assertion#belowOrEqual
+    12.12. Assertion#within
+  13. assertion promises
+    13.1. Assertion#Promise
+    13.2. Assertion#finally
+    13.3. Assertion#eventually → Assertion#finally
+    13.4. Assertion#fulfilled
+    13.5. Assertion#fulfilledWith
+    13.6. Assertion#rejected
+    13.7. Assertion#rejectedWith
+  14. assertion property
+    14.1. Assertion#empty
+    14.2. Assertion#enumerable
+    14.3. Assertion#enumerables
+    14.4. Assertion#keys
+    14.5. Assertion#key → Assertion#keys
+    14.6. Assertion#length
+    14.7. Assertion#lengthOf → Assertion#length
+    14.8. Assertion#ownProperty
+    14.9. Assertion#hasOwnProperty → Assertion#ownProperty
+    14.10. Assertion#properties
+    14.11. Assertion#property
+    14.12. Assertion#propertyByPath
+    14.13. Assertion#propertyWithDescriptor
+    14.14. Assertion#size
+    14.15. Assertion#value
+  15. assertion strings
+    15.1. Assertion#endWith
+    15.2. Assertion#startWith
+  16. assertion stubs
+    16.1. Assertion#alwaysCalledOn
+    16.2. Assertion#alwaysCalledWith
+    16.3. Assertion#alwaysCalledWithExactly
+    16.4. Assertion#alwaysCalledWithMatch
+    16.5. Assertion#alwaysCalledWithNew
+    16.6. Assertion#alwaysThrew
+    16.7. Assertion#callCount
+    16.8. Assertion#called
+    16.9. Assertion#calledOn
+    16.10. Assertion#calledOnce
+    16.11. Assertion#calledThrice
+    16.12. Assertion#calledTwice
+    16.13. Assertion#calledWith
+    16.14. Assertion#calledWithExactly
+    16.15. Assertion#calledWithMatch
+    16.16. Assertion#calledWithNew
+    16.17. Assertion#neverCalledWith
+    16.18. Assertion#neverCalledWithMatch
+    16.19. Assertion#threw
+  17. assertion types
+    17.1. Assertion#Array
+    17.2. Assertion#Boolean
+    17.3. Assertion#Date
+    17.4. Assertion#Error
+    17.5. Assertion#Function
+    17.6. Assertion#Number
+    17.7. Assertion#Object
+    17.8. Assertion#String
+    17.9. Assertion#arguments
+    17.10. Assertion#Arguments → Assertion#arguments
+    17.11. Assertion#class
+    17.12. Assertion#Class → Assertion#class
+    17.13. Assertion#instanceof
+    17.14. Assertion#instanceOf → Assertion#instanceof
+    17.15. Assertion#null
+    17.16. Assertion#Null → Assertion#null
+    17.17. Assertion#type
+    17.18. Assertion#undefined
+    17.19. Assertion#Undefined → Assertion#undefined
+
+==============================================================================
+
+“global” Members                                           *should.js-global*
+
+------------------------------------------------------------------------------
+                                                    *should.js-assertion.add*
+Assertion.add(name, func) ~
+
+Way to extend Assertion function. It uses some logic
+to define only positive assertions and itself rule with negative assertion.
+All actions happen in subcontext and this method take care about negation.
+Potentially we can add some more modifiers that does not depends from state of assertion.
+
+Arguments
+
+1. `name (String)`: Name of assertion. It will be used for defining method or getter on Assertion.prototype
+2. `func (Function)`: Function that will be called on executing assertion
+
+Example
+>
+  Assertion.add('asset', function() {
+     this.params = { operator: 'to be asset' }
+
+     this.obj.should.have.property('id').which.is.a.Number()
+     this.obj.should.have.property('path')
+  })
+<
+------------------------------------------------------------------------------
+                                                *should.js-assertion.addChain*
+Assertion.addChain(name, [onCall]) ~
+
+Add chaining getter to Assertion like .a, .which etc
+
+Arguments
+
+1. `name (string)`: name of getter
+2. `[onCall] (function)`: optional function to call
+
+------------------------------------------------------------------------------
+                                                   *should.js-assertion.alias*
+Assertion.alias(from, to) ~
+
+Create alias for some Assertion property
+
+Arguments
+
+1. `from (String)`: Name of to map
+2. `to (String)`: Name of alias
+
+Example
+>
+  Assertion.alias('true', 'True')
+<
+
+------------------------------------------------------------------------------
+PromisedAssertion(obj) ~
+
+Assertion used to delegate calls of Assertion methods inside of Promise.
+It has almost all methods of Assertion.prototype
+
+Arguments
+
+1. `obj (Promise)`
+
+------------------------------------------------------------------------------
+should(obj) ~
+
+Our function should
+
+Arguments
+
+1. `obj (*)`: Object to assert
+
+Returns
+
+`(should.Assertion)`: Returns new Assertion for beginning assertion chain
+
+Example
+>
+  var should = require('should');
+  should('abc').be.a.String();
+<
+
+------------------------------------------------------------------------------
+should.Assertion(obj) ~
+
+should Assertion
+
+Arguments
+
+1. `obj (*)`: Given object for assertion
+
+------------------------------------------------------------------------------
+should.AssertionError(options) ~
+
+should AssertionError
+
+Arguments
+
+1. `options (Object)`
+
+------------------------------------------------------------------------------
+should.config ~
+
+Object with configuration.
+
+It contains such properties:
+
+- checkProtoEql boolean - Affect if .eql will check objects prototypes
+- plusZeroAndMinusZeroEqual boolean - Affect if .eql will treat +0 and -0 as equal
+Also it can contain options for should-format.
+
+Example
+>
+  var a = { a: 10 }, b = Object.create(null);
+  b.a = 10;
+
+  a.should.be.eql(b);
+  //not throws
+
+  should.config.checkProtoEql = true;
+  a.should.be.eql(b);
+  //throws AssertionError: expected { a: 10 } to equal { a: 10 } (because A and B have different prototypes)
+<
+
+------------------------------------------------------------------------------
+should.extend([propertyName], [proto]) ~
+
+Allow to extend given prototype with should property using given name.
+This getter will unwrap all standard wrappers like Number, Boolean, String.
+
+Using should(obj) is the equivalent of using obj.should with known issues
+(like nulls and method calls etc).To add new assertions, need to use Assertion.add method.
+
+Arguments
+
+1. `[propertyName] (string)`: Name of property to add. Default is 'should'.
+2. `[proto] (Object)`: Prototype to extend with. Default is Object.prototype.
+
+Returns
+
+`({ name: string, descriptor: Object, proto: Object })`: Descriptor enough to return all back
+
+Example
+>
+  var prev = should.extend('must', Object.prototype);
+
+  'abc'.must.startWith('a');
+
+  var should = should.noConflict(prev);
+  should.not.exist(Object.prototype.must);
+<
+
+------------------------------------------------------------------------------
+should.noConflict([desc]) ~
+
+Delete previous extension. If desc missing it will remove default extension.
+
+Arguments
+
+1. `[desc] ({ name: string, descriptor: Object, proto: Object })`: Returned from should.extend object
+
+Returns
+
+`(Function)`: Returns should function
+
+Example
+>
+  var should = require('should').noConflict();
+
+  should(Object.prototype).not.have.property('should');
+
+  var prev = should.extend('must', Object.prototype);
+  'abc'.must.startWith('a');
+  should.noConflict(prev);
+
+  should(Object.prototype).not.have.property('must');
+<
+
+------------------------------------------------------------------------------
+should.use(f) ~
+
+Simple utility function for a bit more easier should assertion extension
+
+Arguments
+
+1. `f (Function)`: So called plugin function. It should accept 2 arguments: should function and Assertion constructor
+
+Returns
+
+`(Function)`: Returns should function
+
+Example
+>
+  should.use(function(should, Assertion) {
+    Assertion.add('asset', function() {
+       this.params = { operator: 'to be asset' };
+
+       this.obj.should.have.property('id').which.is.a.Number();
+       this.obj.should.have.property('path');
+   })
+  })
+<
+
+==============================================================================
+“assertion” Members ~
+
+------------------------------------------------------------------------------
+Assertion#any ~
+
+Any modifier - it affect on execution of sequenced assertion to do not check all, but check any of.
+
+------------------------------------------------------------------------------
+Assertion#assert(expr) ~
+
+Base method for assertions.Before calling this method need to fill Assertion#params object. This method usually called from other assertion methods.
+
+Assertion#params can contain such properties:
+
+- operator - required string containing description of this assertion
+- obj - optional replacement for this.obj, it usefull if you prepare more clear object then given
+- message - if this property filled with string any others will be ignored and this one used as assertion message
+- expected - any object used when you need to assert relation between given object and expected. Like given == expected (== is a relation)
+- details - additional string with details to generated message
+
+Arguments
+
+1. `expr (*)`: Any expression that will be used as a condition for asserting.
+
+Example
+>
+  var a = new should.Assertion(42);
+
+  a.params = {
+   operator: 'to be magic number',
+  }
+
+  a.assert(false);
+  //throws AssertionError: expected 42 to be magic number
+<
+
+------------------------------------------------------------------------------
+Assertion#fail() ~
+
+Shortcut for Assertion#assert(false).
+
+Example
+>
+  var a = new should.Assertion(42);
+
+  a.params = {
+   operator: 'to be magic number',
+  }
+
+  a.fail();
+  //throws AssertionError: expected 42 to be magic number
+<
+
+------------------------------------------------------------------------------
+Assertion#not ~
+
+Negation modifier. Current assertion chain become negated. Each call invert negation on current assertion.
+
+==============================================================================
+“assertion assert” Members ~
+
+------------------------------------------------------------------------------
+should.deepEqual(actual, expected, [message]) ~
+
+Node.js standard assert.deepEqual.
+
+But uses should.js .eql implementation instead of Node.js own deepEqual.
+
+Arguments
+
+1. `actual (*)`
+2. `expected (*)`
+3. `[message] (string)`
+
+------------------------------------------------------------------------------
+should.doesNotThrow(block, [message]) ~
+
+Node.js standard assert.doesNotThrow.
+
+Arguments
+
+1. `block (Function)`
+2. `[message] (String)`
+
+------------------------------------------------------------------------------
+should.equal(actual, expected, [message]) ~
+
+Node.js standard assert.equal.
+
+Arguments
+
+1. `actual (*)`
+2. `expected (*)`
+3. `[message] (string)`
+
+------------------------------------------------------------------------------
+should.exist ~
+
+Assert obj exists, with optional message.
+
+Aliases
+
+should.exists
+
+Arguments
+
+1. `obj (*)`
+2. `[msg] (String)`
+
+Example
+>
+  should.exist(1);
+  should.exist(new Date());
+<
+------------------------------------------------------------------------------
+should.fail(actual, expected, message, operator) ~
+
+Node.js standard assert.fail.
+
+Arguments
+
+1. `actual (*)`: Actual object
+2. `expected (*)`: Expected object
+3. `message (string)`: Message for assertion
+4. `operator (string)`: Operator text
+
+------------------------------------------------------------------------------
+should.ifError(err) ~
+
+Node.js standard assert.ifError.
+
+Arguments
+
+1. `err (Error)`
+
+------------------------------------------------------------------------------
+should.not.exist ~
+
+Asserts obj does not exist, with optional message.
+
+Aliases
+
+should.not.exists
+
+Arguments
+
+1. `obj (*)`
+2. `[msg] (String)`
+
+Example
+>
+  should.not.exist(null);
+  should.not.exist(void 0);
+<
+
+------------------------------------------------------------------------------
+should.notDeepEqual(actual, expected, [message]) ~
+
+Node.js standard assert.notDeepEqual.
+
+But uses should.js .eql implementation instead of Node.js own deepEqual.
+
+Arguments
+
+1. `actual (*)`
+2. `expected (*)`
+3. `[message] (string)`
+
+------------------------------------------------------------------------------
+should.notEqual(actual, expected, [message]) ~
+
+Node.js standard assert.notEqual.
+
+Arguments
+
+1. `actual (*)`
+2. `expected (*)`
+3. `[message] (string)`
+
+should.notStrictEqual(actual, expected, [message])
+
+Node.js standard assert.notStrictEqual.
+
+Arguments
+
+1. `actual (*)`
+2. `expected (*)`
+3. `[message] (string)`
+
+------------------------------------------------------------------------------
+should.ok(value, [message]) ~
+
+Node.js standard assert.ok.
+
+Arguments
+
+1. `value (*)`
+2. `[message] (string)`
+
+------------------------------------------------------------------------------
+should.strictEqual(actual, expected, [message]) ~
+
+Node.js standard assert.strictEqual.
+
+Arguments
+
+1. `actual (*)`
+2. `expected (*)`
+3. `[message] (string)`
+
+------------------------------------------------------------------------------
+should.throws(block, [error], [message]) ~
+
+Node.js standard assert.throws.
+
+Arguments
+
+1. `block (Function)`
+2. `[error] (Function)`
+3. `[message] (String)`
+
+==============================================================================
+“assertion bool” Members ~
+
+------------------------------------------------------------------------------
+Assertion#false([message]) ~
+
+Assert given object is exactly false.
+
+Aliases
+
+Assertion#False
+
+Arguments
+
+1. [message] (string): Optional message
+
+Example
+>
+  (true).should.not.be.false();
+  false.should.be.false();
+<
+------------------------------------------------------------------------------
+Assertion#ok() ~
+
+Assert given object is truthy according javascript type conversions.
+
+Example
+>
+  (true).should.be.ok();
+  ''.should.not.be.ok();
+  should(null).not.be.ok();
+  should(void 0).not.be.ok();
+
+  (10).should.be.ok();
+  (0).should.not.be.ok();
+<
+------------------------------------------------------------------------------
+Assertion#true([message]) ~
+
+Assert given object is exactly true.
+
+Aliases
+
+Assertion#True
+
+Arguments
+
+1. `[message] (string)`: Optional message
+
+Example
+>
+  (true).should.be.true();
+  false.should.not.be.true();
+
+  ({ a: 10}).should.not.be.true();
+<
+==============================================================================
+“assertion chaining” Members ~
+
+------------------------------------------------------------------------------
+Assertion#be ~
+
+Simple chaining. It actually do nothing.
+
+Aliases
+
+Assertion#an, Assertion#of, Assertion#a, Assertion#and, Assertion#been, Assertion#have, Assertion#has, Assertion#with, Assertion#is, Assertion#which, Assertion#the, Assertion#it
+
+
+“assertion contain” Members
+Assertion#containDeep(other)
+
+The same like Assertion#containDeepOrdered but all checks on arrays without order.
+Arguments
+
+other (*): Nested object
+Example
+
+[ 1, 2, 3].should.containDeep([2, 1]);
+[ 1, 2, [ 1, 2, 3 ]].should.containDeep([ 1, [ 3, 1 ]]);
+Assertion#containDeepOrdered(other)
+
+Assert that given object is contain equally structured object on the same depth level.
+If given object is an array and other is an array it checks that the eql elements is going in the same sequence in given array (recursive)
+If given object is an object it checks that the same keys contain deep equal values (recursive)
+On other cases it try to check with .eql
+Arguments
+
+other (*): Nested object
+Example
+
+[ 1, 2, 3].should.containDeepOrdered([1, 2]);
+[ 1, 2, [ 1, 2, 3 ]].should.containDeepOrdered([ 1, [ 2, 3 ]]);
+
+({ a: 10, b: { c: 10, d: [1, 2, 3] }}).should.containDeepOrdered({a: 10});
+({ a: 10, b: { c: 10, d: [1, 2, 3] }}).should.containDeepOrdered({b: {c: 10}});
+({ a: 10, b: { c: 10, d: [1, 2, 3] }}).should.containDeepOrdered({b: {d: [1, 3]}});
+Assertion#containEql(other)
+
+Assert that given object contain something that equal to other. It uses should-equal for equality checks.
+If given object is array it search that one of elements was equal to other.
+If given object is string it checks if other is a substring - expected that other is a string.
+If given object is Object it checks that other is a subobject - expected that other is a object.
+Arguments
+
+other (*): Nested object
+Example
+
+[1, 2, 3].should.containEql(1);
+[{ a: 1 }, 'a', 10].should.containEql({ a: 1 });
+
+'abc'.should.containEql('b');
+'ab1c'.should.containEql(1);
+
+({ a: 10, c: { d: 10 }}).should.containEql({ a: 10 });
+({ a: 10, c: { d: 10 }}).should.containEql({ c: { d: 10 }});
+({ a: 10, c: { d: 10 }}).should.containEql({ b: 10 });
+// throws AssertionError: expected { a: 10, c: { d: 10 } } to contain { b: 10 }
+//            expected { a: 10, c: { d: 10 } } to have property b
+“assertion equality” Members
+Assertion#eql(val, [description])
+
+Deep object equality comparison. For full spec see should-equal tests.
+Aliases
+
+Assertion#deepEqual
+Arguments
+
+val (*): Expected value
+[description] (string): Optional message
+Example
+
+(10).should.be.eql(10);
+('10').should.not.be.eql(10);
+(-0).should.not.be.eql(+0);
+
+NaN.should.be.eql(NaN);
+
+({ a: 10}).should.be.eql({ a: 10 });
+[ 'a' ].should.not.be.eql({ '0': 'a' });
+Assertion#equal(val, [description])
+
+Exact comparison using ===.
+Aliases
+
+Assertion#exactly
+Arguments
+
+val (*): Expected value
+[description] (string): Optional message
+Example
+
+10.should.be.equal(10);
+'a'.should.be.exactly('a');
+
+should(null).be.exactly(null);
+Assertion#equalOneOf(vals)
+
+Exact comparison using === to be one of supplied objects.
+Arguments
+
+vals (*): Expected values
+Example
+
+'ab'.should.be.equalOneOf('a', 10, 'ab');
+'ab'.should.be.equalOneOf(['a', 10, 'ab']);
+Assertion#oneOf(vals)
+
+Exact comparison using .eql to be one of supplied objects.
+Arguments
+
+vals (*): Expected values
+Example
+
+({a: 10}).should.be.oneOf('a', 10, 'ab', {a: 10});
+({a: 10}).should.be.oneOf(['a', 10, 'ab', {a: 10}]);
+“assertion errors” Members
+Assertion#throw([message], [properties])
+
+Assert given function throws error with such message.
+Aliases
+
+Assertion#throwError
+Arguments
+
+[message] (string|RegExp|Function|Object|GeneratorFunction|GeneratorObject): Message to match or properties
+[properties] (Object): Optional properties that will be matched to thrown error
+Example
+
+(function(){ throw new Error('fail') }).should.throw();
+(function(){ throw new Error('fail') }).should.throw('fail');
+(function(){ throw new Error('fail') }).should.throw(/fail/);
+
+(function(){ throw new Error('fail') }).should.throw(Error);
+var error = new Error();
+error.a = 10;
+(function(){ throw error; }).should.throw(Error, { a: 10 });
+(function(){ throw error; }).should.throw({ a: 10 });
+(function*() {
+  yield throwError();
+}).should.throw();
+“assertion es6” Members
+Assertion#generator()
+
+Assert given object is a generator object
+Assertion#iterable()
+
+Assert given object supports es6 iterable protocol (just check
+that object has property Symbol.iterator, which is a function)
+Assertion#iterator()
+
+Assert given object supports es6 iterator protocol (just check
+that object has property next, which is a function)
+“assertion http” Members
+Assertion#header(field, [val])
+
+Asserts given object has property headers which contain field and optional val. Will work well with node Request/Response etc.
+Module
+
+npm i should-http --save-dev
+Arguments
+
+field (string): Name of field
+[val] (string): Optional value of field
+Example
+
+res.should.have.header('content-type', 'application/json');
+Assertion#html()
+
+Shortcut for .should.header('content-type', 'text/html')
+Module
+
+npm i should-http --save-dev
+Example
+
+res.should.be.html();
+Assertion#json()
+
+Shortcut for .should.header('content-type', 'application/json')
+Module
+
+npm i should-http --save-dev
+Example
+
+res.should.be.json();
+Assertion#status(code)
+
+Asserts given object has property statusCode which equal to code. Works well with node's Response.
+Module
+
+npm i should-http --save-dev
+Arguments
+
+code (number): Status code value
+Example
+
+res.should.have.status(200);
+“assertion matching” Members
+Assertion#match(other, [description])
+
+Asserts if given object match other object, using some assumptions:
+First object matched if they are equal,
+If other is a regexp and given object is a string check on matching with regexp
+If other is a regexp and given object is an array check if all elements matched regexp
+If other is a regexp and given object is an object check values on matching regexp
+If other is a function check if this function throws AssertionError on given object or return false - it will be assumed as not matched
+If other is an object check if the same keys matched with above rules
+All other cases failed.Usually it is right idea to add pre type assertions, like .String() or .Object() to be sure assertions will do what you are expecting.
+Object iteration happen by keys (properties with enumerable: true), thus some objects can cause small pain. Typical example is js
+Error - it by default has 2 properties name and message, but they both non-enumerable. In this case make sure you specify checking props (see examples).
+Arguments
+
+other (*): Object to match
+[description] (string): Optional message
+Example
+
+'foobar'.should.match(/^foo/);
+'foobar'.should.not.match(/^bar/);
+
+({ a: 'foo', c: 'barfoo' }).should.match(/foo$/);
+
+['a', 'b', 'c'].should.match(/[a-z]/);
+
+(5).should.not.match(function(n) {
+  return n < 0;
+});
+(5).should.not.match(function(it) {
+   it.should.be.an.Array();
+});
+({ a: 10, b: 'abc', c: { d: 10 }, d: 0 }).should
+.match({ a: 10, b: /c$/, c: function(it) {
+   return it.should.have.property('d', 10);
+}});
+
+[10, 'abc', { d: 10 }, 0].should
+.match({ '0': 10, '1': /c$/, '2': function(it) {
+   return it.should.have.property('d', 10);
+}});
+
+var myString = 'abc';
+
+myString.should.be.a.String().and.match(/abc/);
+
+myString = {};
+
+myString.should.match(/abc/); //yes this will pass
+//better to do
+myString.should.be.an.Object().and.not.empty().and.match(/abc/);//fixed
+
+(new Error('boom')).should.match(/abc/);//passed because no keys
+(new Error('boom')).should.not.match({ message: /abc/ });//check specified property
+Assertion#matchAny(other, [description])
+
+Asserts if any of given object values or array elements match other object, using some assumptions:
+First object matched if they are equal,
+If other is a regexp - matching with regexp
+If other is a function check if this function throws AssertionError on given object or return false - it will be assumed as not matched
+All other cases check if this other equal to each element
+Aliases
+
+Assertion#matchSome
+Arguments
+
+other (*): Object to match
+[description] (string): Optional message
+Example
+
+[ 'a', 'b', 'c'].should.matchAny(/\w+/);
+[ 'a', 'b', 'c'].should.matchAny('a');
+
+[ 'a', 'b', 'c'].should.matchAny(function(value) { value.should.be.eql('a') });
+
+{ a: 'a', b: 'b', c: 'c' }.should.matchAny(function(value) { value.should.be.eql('a') });
+Assertion#matchEach(other, [description])
+
+Asserts if given object values or array elements all match other object, using some assumptions:
+First object matched if they are equal,
+If other is a regexp - matching with regexp
+If other is a function check if this function throws AssertionError on given object or return false - it will be assumed as not matched
+All other cases check if this other equal to each element
+Aliases
+
+Assertion#matchEvery
+Arguments
+
+other (*): Object to match
+[description] (string): Optional message
+Example
+
+[ 'a', 'b', 'c'].should.matchEach(/\w+/);
+[ 'a', 'a', 'a'].should.matchEach('a');
+
+[ 'a', 'a', 'a'].should.matchEach(function(value) { value.should.be.eql('a') });
+
+{ a: 'a', b: 'a', c: 'a' }.should.matchEach(function(value) { value.should.be.eql('a') });
+“assertion numbers” Members
+Assertion#Infinity()
+
+Assert given object is not finite (positive or negative)
+Example
+
+(10).should.not.be.Infinity();
+NaN.should.not.be.Infinity();
+Assertion#NaN()
+
+Assert given object is NaN
+Example
+
+(10).should.not.be.NaN();
+NaN.should.be.NaN();
+Assertion#above(n, [description])
+
+Assert given number above n.
+Aliases
+
+Assertion#greaterThan
+Arguments
+
+n (number): Margin number
+[description] (string): Optional message
+Example
+
+(10).should.be.above(0);
+Assertion#aboveOrEqual(n, [description])
+
+Assert given number above n.
+Aliases
+
+Assertion#greaterThanOrEqual
+Arguments
+
+n (number): Margin number
+[description] (string): Optional message
+Example
+
+(10).should.be.aboveOrEqual(0);
+(10).should.be.aboveOrEqual(10);
+Assertion#approximately(value, delta, [description])
+
+Assert given number near some other value within delta
+Arguments
+
+value (number): Center number
+delta (number): Radius
+[description] (string): Optional message
+Example
+
+(9.99).should.be.approximately(10, 0.1);
+Assertion#below(n, [description])
+
+Assert given number below n.
+Aliases
+
+Assertion#lessThan
+Arguments
+
+n (number): Margin number
+[description] (string): Optional message
+Example
+
+(0).should.be.below(10);
+Assertion#belowOrEqual(n, [description])
+
+Assert given number below n.
+Aliases
+
+Assertion#lessThanOrEqual
+Arguments
+
+n (number): Margin number
+[description] (string): Optional message
+Example
+
+(0).should.be.belowOrEqual(10);
+(0).should.be.belowOrEqual(0);
+Assertion#within(start, finish, [description])
+
+Assert given number between start and finish or equal one of them.
+Arguments
+
+start (number): Start number
+finish (number): Finish number
+[description] (string): Optional message
+Example
+
+(10).should.be.within(0, 20);
+“assertion promises” Members
+Assertion#Promise()
+
+Assert given object is a Promise
+Example
+
+promise.should.be.Promise()
+(new Promise(function(resolve, reject) { resolve(10); })).should.be.a.Promise()
+(10).should.not.be.a.Promise()
+Assertion#finally()
+
+Assert given object is promise and wrap it in PromisedAssertion, which has all properties of Assertion.
+That means you can chain as with usual Assertion.
+Result of assertion is still .thenable and should be handled accordingly.
+Aliases
+
+Assertion#eventually
+Returns
+
+(PromisedAssertion): Like Assertion, but .then this.obj in Assertion
+Example
+
+(new Promise(function(resolve, reject) { resolve(10); }))
+   .should.be.eventually.equal(10);
+
+// test example with mocha it is possible to return promise
+it('is async', () => {
+   return new Promise(resolve => resolve(10))
+     .should.be.finally.equal(10);
+});
+Assertion#fulfilled()
+
+Assert given promise will be fulfilled. Result of assertion is still .thenable and should be handled accordingly.
+Returns
+
+(Promise)
+Example
+
+// don't forget to handle async nature
+(new Promise(function(resolve, reject) { resolve(10); })).should.be.fulfilled();
+
+// test example with mocha it is possible to return promise
+it('is async', () => {
+   return new Promise(resolve => resolve(10))
+     .should.be.fulfilled();
+});
+Assertion#fulfilledWith()
+
+Assert given promise will be fulfilled with some expected value (value compared using .eql).
+Result of assertion is still .thenable and should be handled accordingly.
+Returns
+
+(Promise)
+Example
+
+// don't forget to handle async nature
+(new Promise(function(resolve, reject) { resolve(10); }))
+   .should.be.fulfilledWith(10);
+
+// test example with mocha it is possible to return promise
+it('is async', () => {
+   return new Promise((resolve, reject) => resolve(10))
+      .should.be.fulfilledWith(10);
+});
+Assertion#rejected()
+
+Assert given promise will be rejected. Result of assertion is still .thenable and should be handled accordingly.
+Returns
+
+(Promise)
+Example
+
+// don't forget to handle async nature
+(new Promise(function(resolve, reject) { resolve(10); }))
+   .should.not.be.rejected();
+
+// test example with mocha it is possible to return promise
+it('is async', () => {
+   return new Promise((resolve, reject) => reject(new Error('boom')))
+     .should.be.rejected();
+});
+Assertion#rejectedWith()
+
+Assert given promise will be rejected with some sort of error. Arguments is the same for Assertion#throw.
+Result of assertion is still .thenable and should be handled accordingly.
+Returns
+
+(Promise)
+Example
+
+function failedPromise() {
+  return new Promise(function(resolve, reject) {
+    reject(new Error('boom'))
+  })
+}
+failedPromise().should.be.rejectedWith(Error);
+failedPromise().should.be.rejectedWith('boom');
+failedPromise().should.be.rejectedWith(/boom/);
+failedPromise().should.be.rejectedWith(Error, { message: 'boom' });
+failedPromise().should.be.rejectedWith({ message: 'boom' });
+
+// test example with mocha it is possible to return promise
+it('is async', () => {
+   return failedPromise().should.be.rejectedWith({ message: 'boom' });
+});
+“assertion property” Members
+Assertion#empty()
+
+Asserts given object is empty. For strings, arrays and arguments it checks .length property, for objects it checks keys.
+Example
+
+''.should.be.empty();
+[].should.be.empty();
+({}).should.be.empty();
+Assertion#enumerable(name, [val])
+
+Asserts given object has enumerable property with optionally value. On success it change given object to be value of property.
+Arguments
+
+name (string): Name of property
+[val] (*): Optional property value to check
+Example
+
+({ a: 10 }).should.have.enumerable('a');
+Assertion#enumerables(names)
+
+Asserts given object has enumerable properties
+Arguments
+
+names (...Array|string|Object): Names of property
+Example
+
+({ a: 10, b: 10 }).should.have.enumerables('a');
+Assertion#keys(keys)
+
+Asserts given object has such keys. Compared to properties, keys does not accept Object as a argument.
+When calling via .key current object in assertion changed to value of this key
+Aliases
+
+Assertion#key
+Arguments
+
+keys (*): Keys to check
+Example
+
+({ a: 10 }).should.have.keys('a');
+({ a: 10, b: 20 }).should.have.keys('a', 'b');
+(new Map([[1, 2]])).should.have.key(1);
+Assertion#length(n, [description])
+
+Asserts given object has property length with given value n
+Aliases
+
+Assertion#lengthOf
+Arguments
+
+n (number): Expected length
+[description] (string): Optional message
+Example
+
+[1, 2].should.have.length(2);
+Assertion#ownProperty(name, [description])
+
+Asserts given object has own property. On success it change given object to be value of property.
+Aliases
+
+Assertion#hasOwnProperty
+Arguments
+
+name (string): Name of property
+[description] (string): Optional message
+Example
+
+({ a: 10 }).should.have.ownProperty('a');
+Assertion#properties(names)
+
+Asserts given object has properties. On this method affect .any modifier, which allow to check not all properties.
+Arguments
+
+names (...Array|string|Object): Names of property
+Example
+
+({ a: 10 }).should.have.properties('a');
+({ a: 10, b: 20 }).should.have.properties([ 'a' ]);
+({ a: 10, b: 20 }).should.have.properties({ b: 20 });
+Assertion#property(name, [val])
+
+Asserts given object has property with optionally value. On success it change given object to be value of property.
+Arguments
+
+name (string): Name of property
+[val] (*): Optional property value to check
+Example
+
+({ a: 10 }).should.have.property('a');
+Assertion#propertyByPath(properties)
+
+Asserts given object has nested property in depth by path. On success it change given object to be value of final property.
+Arguments
+
+properties (...Array|string): Properties path to search
+Example
+
+({ a: {b: 10}}).should.have.propertyByPath('a', 'b').eql(10);
+Assertion#propertyWithDescriptor(name, desc)
+
+Asserts given object has some descriptor. On success it change given object to be value of property.
+Arguments
+
+name (string): Name of property
+desc (Object): Descriptor like used in Object.defineProperty (not required to add all properties)
+Example
+
+({ a: 10 }).should.have.propertyWithDescriptor('a', { enumerable: true });
+Assertion#size(s)
+
+Asserts given object has such size.
+Arguments
+
+s (number): Size to check
+Example
+
+({ a: 10 }).should.have.size(1);
+(new Map([[1, 2]])).should.have.size(1);
+Assertion#value(key, value)
+
+Asserts given object has such value for given key
+Arguments
+
+key (*): Key to check
+value (*): Value to check
+Example
+
+({ a: 10 }).should.have.value('a', 10);
+(new Map([[1, 2]])).should.have.value(1, 2);
+“assertion strings” Members
+Assertion#endWith(str, [description])
+
+Assert given string ends with prefix
+Arguments
+
+str (string): Prefix
+[description] (string): Optional message
+Example
+
+'abca'.should.endWith('a');
+Assertion#startWith(str, [description])
+
+Assert given string starts with prefix
+Arguments
+
+str (string): Prefix
+[description] (string): Optional message
+Example
+
+'abc'.should.startWith('a');
+“assertion stubs” Members
+Assertion#alwaysCalledOn(obj)
+
+Assert stub was called with given object as this always. So if you call stub several times
+all should be with the same object
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+obj (*):
+object that was used as this
+Example
+
+var callback = sinon.spy();
+var obj = {};
+callback.call(obj);
+callback.should.be.alwaysCalledOn(obj);
+Assertion#alwaysCalledWith(args)
+
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+args (*):
+arguments that was used for calling
+Example
+
+var callback = sinon.spy();
+
+callback(1, 2, 3);
+
+callback.should.be.alwaysCalledWith(1, 2, 3);
+Assertion#alwaysCalledWithExactly(args)
+
+Passes if the spy was always called with the provided arguments and no others.
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+args (*):
+arguments that was used for calling
+Assertion#alwaysCalledWithMatch(args)
+
+Returns true if spy was always called with matching arguments (and possibly others).
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+args (*):
+arguments that was used for calling
+Assertion#alwaysCalledWithNew()
+
+Module
+
+npm i should-sinon --save-dev
+Example
+
+var Class = sinon.spy();
+
+var c1 = new Class();
+var c2 = new Class();
+
+Class.should.be.alwaysCalledWithNew;
+Assertion#alwaysThrew(ex)
+
+Passes if the spy always threw the given exception. The exception can be a
+string denoting its type, or an actual object. If no argument is
+provided, the assertion passes if the spy ever threw any exception.
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+ex (string|Error):
+exception to be thrown
+Assertion#callCount(count)
+
+Assert stub was called at exact number of times
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+count (Number):
+number of calles
+Example
+
+var callback = sinon.spy();
+callback.should.have.callCount(0);
+callback();
+callback.should.have.callCount(1);
+callback();
+callback.should.have.callCount(2);
+Assertion#called()
+
+Assert stub was called at least once
+Module
+
+npm i should-sinon --save-dev
+Example
+
+var callback = sinon.spy();
+callback();
+callback.should.be.called();
+Assertion#calledOn(obj)
+
+Assert stub was called with given object as this
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+obj (*):
+object that was used as this
+Example
+
+var callback = sinon.spy();
+var obj = {};
+callback.call(obj);
+callback.should.be.calledOn(obj);
+Assertion#calledOnce()
+
+Assert stub was called at exactly once
+Module
+
+npm i should-sinon --save-dev
+Example
+
+var callback = sinon.spy();
+callback();
+callback.should.be.calledOnce();
+Assertion#calledThrice()
+
+Assert stub was called at exactly thrice
+Module
+
+npm i should-sinon --save-dev
+Example
+
+var callback = sinon.spy();
+callback();
+callback();
+callback();
+callback.should.be.calledThrice();
+Assertion#calledTwice()
+
+Assert stub was called at exactly twice
+Module
+
+npm i should-sinon --save-dev
+Example
+
+var callback = sinon.spy();
+callback();
+callback();
+callback.should.be.calledTwice();
+Assertion#calledWith(args)
+
+Asserts that stub was called with given arguments
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+args (*):
+arguments that was used for calling
+Example
+
+var callback = sinon.spy();
+
+callback(1, 2, 3);
+
+callback.should.be.calledWith(1, 2, 3);
+Assertion#calledWithExactly(args)
+
+Returns true if call received provided arguments and no others.
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+args (*):
+arguments that was used for calling
+Assertion#calledWithMatch(args)
+
+Returns true if spy was called with matching arguments (and possibly others).
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+args (*):
+arguments that was used for calling
+Assertion#calledWithNew()
+
+Asserts that stub was called with new
+Module
+
+npm i should-sinon --save-dev
+Example
+
+var Class = sinon.spy();
+
+var c = new Class();
+
+Class.should.be.calledWithNew;
+Assertion#neverCalledWith(args)
+
+Returns true if the spy/stub was never called with the provided arguments.
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+args (*):
+arguments that was used for calling
+Example
+
+var callback = sinon.spy();
+
+callback(1, 2, 3);
+
+callback.should.be.neverCalledWith(1, 2, 3);
+Assertion#neverCalledWithMatch(args)
+
+Returns true if the spy/stub was never called with matching arguments.
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+args (*):
+arguments that was used for calling
+Assertion#threw(ex)
+
+Passes if the spy threw the given exception. The exception can be a
+string denoting its type, or an actual object. If no argument is
+provided, the assertion passes if the spy ever threw any exception.
+Module
+
+npm i should-sinon --save-dev
+Arguments
+
+ex (string|Error):
+exception to be thrown
+“assertion types” Members
+Assertion#Array()
+
+Assert given object is array
+Assertion#Boolean()
+
+Assert given object is boolean
+Assertion#Date()
+
+Assert given object is a date
+Assertion#Error()
+
+Assert given object is error
+Assertion#Function()
+
+Assert given object is function
+Assertion#Number()
+
+Assert given object is number
+Assertion#Object()
+
+Assert given object is object
+Assertion#String()
+
+Assert given object is string
+Assertion#arguments()
+
+Assert given object is arguments
+Aliases
+
+Assertion#Arguments
+Assertion#class()
+
+Assert given object has some internal [[Class]], via Object.prototype.toString call
+Aliases
+
+Assertion#Class
+Assertion#instanceof(constructor, [description])
+
+Assert given object is instance of constructor
+Aliases
+
+Assertion#instanceOf
+Arguments
+
+constructor (Function): Constructor function
+[description] (string): Optional message
+Assertion#null()
+
+Assert given object is null
+Aliases
+
+Assertion#Null
+Assertion#type(type, [description])
+
+Assert given object has some type using typeof
+Arguments
+
+type (string): Type name
+[description] (string): Optional message
+Assertion#undefined()
+
+Assert given object is undefined
+Aliases
+
+Assertion#Undefined
+
+ vim:tw=78:ts=8:ft=help:norl:
